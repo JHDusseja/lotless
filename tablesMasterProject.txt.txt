@@ -1,0 +1,72 @@
+---shelfdetails---
+shelfid
+shelfname
+itemid
+totalweight
+numberofitems
+
+---itemdetails---
+itemid
+itemname
+itemweight
+
+---activitydetails---
+activityid
+shelfid
+itemid
+weightdecreased
+numberofitemspicked
+imageid
+time
+
+---imagedetails---
+imageid
+imagepath
+
+
+
+post /shelves
+{
+	shelfname
+	itemid (optional)
+	totalweight (optional)
+}
+response
+{
+	id: newShelfID
+}
+
+post /shelves/addtoshelf
+{
+	shelfid
+	itemid
+	totalweight
+}
+response : Ok
+
+post /items
+{
+	itemname
+	itemweight
+}
+response
+{
+	id: newItemID
+}
+
+post /activities
+{
+	shelfid
+	itemid
+	totalweight
+	imageid
+}
+
+post /images
+{
+	image
+}
+response
+{
+	"id": newImageId
+}
