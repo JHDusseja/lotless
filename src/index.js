@@ -28,7 +28,7 @@ var index = require('./routes/index');
 
 var app = express();
 
-var port = '443';
+var port = '80';
 app.set('port', port);
 
 // view engine setup
