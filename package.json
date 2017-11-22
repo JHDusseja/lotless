@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -w src --exec \"babel-node src --presets env,stage-0\"",
-    "build": "babel src -s -D -d dist --presets env,stage-0",
+    "build": ".\node_modules\babel-cli\bin\babel src -s -D -d dist --presets env,stage-0",
     "start": "node dist",
     "prestart": "npm run -s build",
     "test": "echo \"Error: no test specified\" && exit 1"
