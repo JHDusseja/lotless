@@ -9,6 +9,7 @@ numberofitems
 itemid
 itemname
 itemweight
+itemprice
 
 ---activitydetails---
 activityid
@@ -23,7 +24,21 @@ time
 imageid
 imagepath
 
+---cartdetails---
+cartid
+imageid
+active
 
+---cartmappings---
+cartid
+activityid
+
+
+get /shelves/:id
+response
+{
+	shelfdetails: {}
+}
 
 post /shelves
 {
@@ -48,6 +63,7 @@ post /items
 {
 	itemname
 	itemweight
+	itemprice
 }
 response
 {
@@ -69,4 +85,16 @@ post /images
 response
 {
 	"id": newImageId
+}
+
+post /checkout
+{
+	image
+}
+response
+{
+	"cartId" : cartId,
+	"cart" : [ { "itemname" : itemname, "count": count, "itemprice": itemprice, "total" : total},
+		{ "itemname" : itemname, "count": count, "itemprice": itemprice, "total" : total} ],
+	"total" : totalAmount
 }

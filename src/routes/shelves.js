@@ -12,6 +12,21 @@ function createShelfHelper(req, res, sql, item) {
     });
 }
 
+shelvesrouter.get('/:id', function (req, res) {
+    let sql = "Select * from ?? where ?? = ?";
+    let inserts = ['shelfdetails', 'shelfid', req.params.id];
+
+    console.dir(req.params);
+
+    performQuery(sql, inserts).then(function (results) {
+        res.json({shelfdetails : results[0]});
+    }).catch(function (err) {
+        console.log(err);
+        res.status(500).send("Internal error");
+    });
+
+});
+
 shelvesrouter.post('/', function (req, res) {
     let sql = "Insert into shelfdetails Set ?";
     let itemid = req.body.itemid || null;
@@ -39,6 +54,8 @@ shelvesrouter.post('/addtoshelf', function (req, res) {
     let sql = "Select * from ?? where ?? = ?";
     let inserts = [ 'itemdetails', 'itemid', req.body.itemid ];
     let noOfItems;
+
+    console.dir(req.body);
 
     performQuery(sql, inserts).then(function (results) {
         noOfItems = req.body.totalweight / results[0].itemweight;

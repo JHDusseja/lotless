@@ -25,6 +25,7 @@ export function performQuery(sql, inserts) {
             connection.query(sql, inserts, function (err, results, fields) {
                 if(err) {
                     console.log("Error inside performQuery");
+                    console.log(err);
                     reject(err);
                 }
                 resolve(results);

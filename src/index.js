@@ -11,6 +11,8 @@ import {itemsrouter} from './routes/items';
 import {shelvesrouter} from './routes/shelves';
 import {imagesrouter} from './routes/images';
 import {activitiesrouter} from './routes/activities';
+import {checkoutrouter} from './routes/checkout';
+import {findDiff} from "./routes/resemble";
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -28,7 +30,7 @@ var index = require('./routes/index');
 
 var app = express();
 
-var port = '80';
+var port = '6565';
 app.set('port', port);
 
 // view engine setup
@@ -48,6 +50,7 @@ app.use('/items', itemsrouter);
 app.use('/shelves', shelvesrouter);
 app.use('/images', upload.single('img'), imagesrouter);
 app.use('/activities', activitiesrouter);
+app.use('/checkout', upload.single('img'), checkoutrouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -77,6 +80,7 @@ getConnection().then(function (connection) {
     // server.listen(port, function (req, res) {
     //     console.log(`Listening on port: ${port}`);
     // });
+    // console.log(diff);
     app.listen(port, function (req, res) {
         console.log(`Listening on port: ${port}`);
     });
