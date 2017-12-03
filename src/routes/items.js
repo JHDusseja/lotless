@@ -11,6 +11,6 @@ itemsrouter.post('/', function (req, res) {
         res.json({"id" : results.insertId});
     }).catch(function (err) {
         console.log(err);
-        res.status(500).send("Internal Error");
+        res.status(500).json({"msg" : "Internal Error"});
     });
 });

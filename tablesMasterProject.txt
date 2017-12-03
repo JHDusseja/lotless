@@ -57,7 +57,11 @@ post /shelves/addtoshelf
 	itemid
 	totalweight
 }
-response : Ok
+response
+{
+	"msg": "Ok"
+}
+
 
 post /items
 {
@@ -75,7 +79,12 @@ post /activities
 	shelfid
 	itemid
 	totalweight
-	imageid
+	image
+}
+response
+{
+	"msg": "Ok"/"Internal Ok",
+	"numberofitemsleft": noOfItemsLeft
 }
 
 post /images
@@ -89,7 +98,7 @@ response
 
 post /checkout
 {
-	image
+	"img" : image
 }
 response
 {

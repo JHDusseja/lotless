@@ -8,7 +8,7 @@ function createShelfHelper(req, res, sql, item) {
         res.json({"id" : results.insertId});
     }).catch(function (err) {
         console.log(err);
-        res.status(500).send("Internal error");
+        res.status(500).json({"msg" : "Internal error"});
     });
 }
 
@@ -22,7 +22,7 @@ shelvesrouter.get('/:id', function (req, res) {
         res.json({shelfdetails : results[0]});
     }).catch(function (err) {
         console.log(err);
-        res.status(500).send("Internal error");
+        res.status(500).json({"msg" : "Internal Error"});
     });
 
 });
@@ -42,7 +42,7 @@ shelvesrouter.post('/', function (req, res) {
             createShelfHelper(req, res, sql, item);
         }).catch(function (err) {
             console.log(err);
-            res.status(500).send("Internal error");
+            res.status(500).json({"msg" : "Internal Error"});
         });
     } else {
         let item = {shelfname: req.body.shelfname, itemid: itemid, totalweight: totalweight, numberofitems: numberofitems};
@@ -51,6 +51,7 @@ shelvesrouter.post('/', function (req, res) {
 });
 
 shelvesrouter.post('/addtoshelf', function (req, res) {
+    console.log(req.body);
     let sql = "Select * from ?? where ?? = ?";
     let inserts = [ 'itemdetails', 'itemid', req.body.itemid ];
     let noOfItems;
@@ -64,10 +65,10 @@ shelvesrouter.post('/addtoshelf', function (req, res) {
     }).then(function (results) {
         return performQuery(sql, ['shelfdetails', { totalweight: req.body.totalweight, numberofitems: noOfItems }, 'shelfid', req.body.shelfid]);
     }).then(function (results) {
-        res.send("Ok");
+        res.json({"msg": "Ok"});
     }).catch(function (err) {
         console.log(err);
-        res.status(500).send("Internal Error");
+        res.status(500).json({"msg" : "Internal Error"});
     });
 
 });

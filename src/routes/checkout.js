@@ -60,13 +60,13 @@ checkoutrouter.post('/', async function (req, res) {
                 }
             }
             if (!matchFlag)
-                res.status(500).send("Image Not Recognised!");
+                res.status(500).json({"msg": "Image Not Recognised!"});
         } else {
-            res.status(500).send("No Active Cart!");
+            res.status(500).json({"msg": "No Active Cart!"});
         }
     }
     catch(e) {
         console.log(e);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({"msg" : "Internal Server Error"});
     }
 });

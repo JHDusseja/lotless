@@ -37,7 +37,7 @@ CREATE TABLE `activitydetails` (
   CONSTRAINT `activitydetails_ibfk_1` FOREIGN KEY (`shelfid`) REFERENCES `shelfdetails` (`shelfid`),
   CONSTRAINT `activitydetails_ibfk_2` FOREIGN KEY (`itemid`) REFERENCES `itemdetails` (`itemid`),
   CONSTRAINT `activitydetails_ibfk_3` FOREIGN KEY (`imageid`) REFERENCES `imagedetails` (`imageid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,8 +46,62 @@ CREATE TABLE `activitydetails` (
 
 LOCK TABLES `activitydetails` WRITE;
 /*!40000 ALTER TABLE `activitydetails` DISABLE KEYS */;
-INSERT INTO `activitydetails` VALUES (1,1,2,5.000,50,1,'2017-11-09 19:13:41');
+INSERT INTO `activitydetails` VALUES (1,1,2,0.000,0,4,'2017-11-29 18:24:58'),(2,1,2,1.000,10,4,'2017-11-29 18:25:30'),(3,1,2,1.000,10,1,'2017-11-29 18:26:12'),(4,1,2,1.000,10,1,'2017-11-29 18:31:57');
 /*!40000 ALTER TABLE `activitydetails` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cartdetails`
+--
+
+DROP TABLE IF EXISTS `cartdetails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cartdetails` (
+  `cartid` int(11) NOT NULL AUTO_INCREMENT,
+  `imageid` int(11) NOT NULL,
+  `active` varchar(3) NOT NULL,
+  PRIMARY KEY (`cartid`),
+  KEY `imageid` (`imageid`),
+  CONSTRAINT `cartdetails_ibfk_1` FOREIGN KEY (`imageid`) REFERENCES `imagedetails` (`imageid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cartdetails`
+--
+
+LOCK TABLES `cartdetails` WRITE;
+/*!40000 ALTER TABLE `cartdetails` DISABLE KEYS */;
+INSERT INTO `cartdetails` VALUES (1,4,'no');
+/*!40000 ALTER TABLE `cartdetails` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cartmappings`
+--
+
+DROP TABLE IF EXISTS `cartmappings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cartmappings` (
+  `cartid` int(11) NOT NULL,
+  `activityid` int(11) NOT NULL,
+  KEY `cartid` (`cartid`),
+  KEY `activityid` (`activityid`),
+  CONSTRAINT `cartmappings_ibfk_1` FOREIGN KEY (`cartid`) REFERENCES `activitydetails` (`activityid`),
+  CONSTRAINT `cartmappings_ibfk_2` FOREIGN KEY (`activityid`) REFERENCES `activitydetails` (`activityid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cartmappings`
+--
+
+LOCK TABLES `cartmappings` WRITE;
+/*!40000 ALTER TABLE `cartmappings` DISABLE KEYS */;
+INSERT INTO `cartmappings` VALUES (1,1),(1,2),(1,3),(1,4);
+/*!40000 ALTER TABLE `cartmappings` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -61,7 +115,7 @@ CREATE TABLE `imagedetails` (
   `imageid` int(11) NOT NULL AUTO_INCREMENT,
   `imagepath` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`imageid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +124,7 @@ CREATE TABLE `imagedetails` (
 
 LOCK TABLES `imagedetails` WRITE;
 /*!40000 ALTER TABLE `imagedetails` DISABLE KEYS */;
-INSERT INTO `imagedetails` VALUES (1,'C:\\Users\\Jayesh\\WebstormProjects\\lotless\\src\\public\\images\\img-1510246696589.jpg'),(2,'C:\\Users\\Jayesh\\WebstormProjects\\lotless\\src\\public\\images\\img-1510246719728.jpg');
+INSERT INTO `imagedetails` VALUES (1,'C:\\Users\\Jayesh\\WebstormProjects\\lotless\\src\\public\\images\\img-1510246696589.jpg'),(2,'C:\\Users\\Jayesh\\WebstormProjects\\lotless\\src\\public\\images\\img-1510246719728.jpg'),(3,'C:\\Users\\Jayesh\\WebstormProjects\\lotless\\src\\public\\images\\img-1511677030762.jpg'),(4,'C:\\Users\\Jayesh\\WebstormProjects\\lotless\\src\\public\\images\\img-1511677305620.jpg');
 /*!40000 ALTER TABLE `imagedetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,6 +139,7 @@ CREATE TABLE `itemdetails` (
   `itemid` int(11) NOT NULL AUTO_INCREMENT,
   `itemname` varchar(50) NOT NULL,
   `itemweight` decimal(7,3) NOT NULL,
+  `itemprice` decimal(7,3) NOT NULL,
   PRIMARY KEY (`itemid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -95,7 +150,7 @@ CREATE TABLE `itemdetails` (
 
 LOCK TABLES `itemdetails` WRITE;
 /*!40000 ALTER TABLE `itemdetails` DISABLE KEYS */;
-INSERT INTO `itemdetails` VALUES (1,'maggi',0.100),(2,'noodles',0.100),(3,'bread',0.200);
+INSERT INTO `itemdetails` VALUES (1,'maggi',0.100,10.000),(2,'noodles',0.100,20.000),(3,'bread',0.200,30.000);
 /*!40000 ALTER TABLE `itemdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +179,7 @@ CREATE TABLE `shelfdetails` (
 
 LOCK TABLES `shelfdetails` WRITE;
 /*!40000 ALTER TABLE `shelfdetails` DISABLE KEYS */;
-INSERT INTO `shelfdetails` VALUES (1,'firstShelf',2,15.000,150),(2,'SecondShelf',1,10.000,100);
+INSERT INTO `shelfdetails` VALUES (1,'firstShelf',2,12.000,150),(2,'SecondShelf',1,10.000,100);
 /*!40000 ALTER TABLE `shelfdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -137,4 +192,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-21 21:17:38
+-- Dump completed on 2017-11-30 20:30:19

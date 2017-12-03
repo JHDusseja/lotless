@@ -5,27 +5,39 @@ import {findDiff} from "./resemble";
 
 export let activitiesrouter = express.Router();
 
+async function uploadImage(req) {
+    let sql = "Insert into ?? Set ?";
+    let inserts = ['imagedetails', {imagepath : req.file.path}];
+    let result;
+    try {
+        result = await performQuery(sql, inserts);
+    }catch(e) {
+        console.log(e);
+    }
+    return result.insertId;
+}
+
 activitiesrouter.post('/', async function (req,res) {
     try {
         let shelfId = req.body.shelfid;
         let newWeight = req.body.totalweight;
-        let imageId = req.body.imageid;
         let imagePath, activityId, cartId, results;
-        let previousWeight, itemId, itemWeight, weightDecreased, noOfItemsPicked;
+        let previousWeight, itemId, itemWeight, weightDecreased, noOfItemsPicked, noOfItemsLeft;
 
-        let sql = "Select * from ?? where ?? = ?";
-        let inserts = ['imagedetails', 'imageid', imageId];
-        results = await performQuery(sql, inserts);
-        imagePath = results[0].imagepath;
+        let imageId = await uploadImage(req);
 
-        sql = "Select * from shelfdetails Join itemdetails on shelfdetails.itemid = itemdetails .itemid where shelfdetails.shelfid = ?";
-        inserts = [shelfId];
+        imagePath = req.file.path;
+
+        let sql = "Select * from shelfdetails Join itemdetails on shelfdetails.itemid = itemdetails .itemid where shelfdetails.shelfid = ?";
+        let inserts = [shelfId];
         results = await performQuery(sql, inserts);
+
         previousWeight = results[0].totalweight;
         itemId = results[0].itemid;
         itemWeight = results[0].itemweight;
         weightDecreased = previousWeight - newWeight;
         noOfItemsPicked = weightDecreased / itemWeight;
+        noOfItemsLeft = results[0].numberofitems - noOfItemsPicked;
 
         sql = "Insert into ?? Set ?";
         inserts = ['activitydetails', {
@@ -39,8 +51,8 @@ activitiesrouter.post('/', async function (req,res) {
         results = await performQuery(sql, inserts);
         activityId = results.insertId;
 
-        sql = "Update ?? Set ?? = ? where ?? = ?";
-        inserts = ['shelfdetails', 'totalweight', newWeight, 'shelfid', shelfId];
+        sql = "Update ?? Set ? where ?? = ?";
+        inserts = ['shelfdetails', {'totalweight': newWeight, 'numberofitems' : noOfItemsLeft}, 'shelfid', shelfId];
         results = await performQuery(sql, inserts);
 
         sql = "Select * from ?? where ?? = ?";
@@ -64,22 +76,22 @@ activitiesrouter.post('/', async function (req,res) {
                     inserts = ['cartmappings', {cartid: currCartId, activityid: activityId}];
                     let s = await performQuery(sql, inserts);
                     matchFlag = true;
-                    return res.send("Internal OK");
+                    return res.json({"msg" : "Internal OK", "numberofitemsleft" : noOfItemsLeft});
                 }
             }
             if (!matchFlag)
-                insertNewMapping(req, res, imageId, activityId);
+                insertNewMapping(req, res, imageId, activityId, noOfItemsLeft);
         } else {
-            insertNewMapping(req, res, imageId, activityId);
+            insertNewMapping(req, res, imageId, activityId, noOfItemsLeft);
         }
     }
     catch(e) {
         console.log(e);
-        res.status(500).send("Internal Server Error!");
+        res.status(500).json({"msg" : "Internal Server Error!"});
     }
 });
 
-function insertNewMapping(req, res, imageId, activityId) {
+function insertNewMapping(req, res, imageId, activityId, noOfItemsLeft) {
     let sql = "Insert into ?? Set ?";
     let inserts = ['cartdetails', {imageid: imageId, active: 'yes'}];
     performQuery(sql, inserts).then(function (results) {
@@ -87,7 +99,7 @@ function insertNewMapping(req, res, imageId, activityId) {
         sql = "Insert into ?? Set ?";
         inserts = ['cartmappings', {cartid: cartId, activityid: activityId}];
         performQuery(sql, inserts).then(function (results) {
-            res.send("OK");
+            res.json({"msg" : "OK", "numberofitemsleft" : noOfItemsLeft});
         });
     });
 }

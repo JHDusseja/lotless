@@ -49,7 +49,7 @@ app.use('/', index);
 app.use('/items', itemsrouter);
 app.use('/shelves', shelvesrouter);
 app.use('/images', upload.single('img'), imagesrouter);
-app.use('/activities', activitiesrouter);
+app.use('/activities', upload.single('img'), activitiesrouter);
 app.use('/checkout', upload.single('img'), checkoutrouter);
 
 // catch 404 and forward to error handler
